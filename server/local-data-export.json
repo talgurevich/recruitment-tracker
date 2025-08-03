@@ -1,0 +1,57 @@
+{
+  "users": [
+    {
+      "id": "3b87d981-bad1-4e29-89b9-b37c8e0a1d3c",
+      "email": "tal.gurevich@gmail.com",
+      "password": "$2b$10$PZ3uVhyx3HEgIWG/.mNs3eD2Yx7eBVYEytv/QYtWe3V/tK7xX/cKO",
+      "name": "Tal Gurevich",
+      "createdAt": "2025-08-03T07:09:40.011Z",
+      "updatedAt": "2025-08-03T07:09:40.011Z",
+      "recruitmentProcesses": [
+        {
+          "id": "96a4b8da-ff3e-43c3-95eb-4bf490788f54",
+          "userId": "3b87d981-bad1-4e29-89b9-b37c8e0a1d3c",
+          "companyName": "Mixtiles",
+          "position": "Director of Product",
+          "status": "INTERVIEW",
+          "contactEmail": "hadar.abir@mixtiles.com",
+          "contactPhone": "‪+972 52‑255‑0260‬",
+          "contactName": "hadar",
+          "rejectionReason": "",
+          "notes": "",
+          "appliedDate": "2025-08-03T07:11:19.386Z",
+          "lastContactDate": null,
+          "salaryRange": "",
+          "location": "Tel Aviv",
+          "jobType": "FULL_TIME",
+          "source": "LinkedIn",
+          "createdAt": "2025-08-03T07:11:19.386Z",
+          "updatedAt": "2025-08-03T07:18:25.890Z",
+          "actionItems": []
+        },
+        {
+          "id": "834ebe73-2da9-47e7-a231-1e92a65c91b6",
+          "userId": "3b87d981-bad1-4e29-89b9-b37c8e0a1d3c",
+          "companyName": "Google",
+          "position": "Sr Product Manager",
+          "status": "APPLIED",
+          "contactEmail": "",
+          "contactPhone": "",
+          "contactName": "",
+          "rejectionReason": null,
+          "notes": "",
+          "appliedDate": "2025-08-03T08:33:48.844Z",
+          "lastContactDate": null,
+          "salaryRange": null,
+          "location": "Haifa",
+          "jobType": "FULL_TIME",
+          "source": "Linkedin",
+          "createdAt": "2025-08-03T08:33:48.844Z",
+          "updatedAt": "2025-08-03T08:33:48.844Z",
+          "actionItems": []
+        }
+      ]
+    }
+  ],
+  "timestamp": "2025-08-03T17:31:06.734Z"
+}
