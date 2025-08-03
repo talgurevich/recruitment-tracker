@@ -20,16 +20,31 @@ async function importData() {
       
       // Check if user already exists
       const existingUser = await prisma.user.findUnique({
-        where: { email: userData.email }
+        where: { email: userData.email },
+        include: {
+          recruitmentProcesses: {
+            include: {
+              actionItems: true
+            }
+          }
+        }
       });
 
+      let targetUser;
+
       if (existingUser) {
-        console.log(`   ⚠️  User ${userData.email} already exists, skipping...`);
-        continue;
+        console.log(`   🔄 User ${userData.email} already exists, deleting and recreating...`);
+        
+        // Delete existing user and all related data (cascading delete)
+        await prisma.user.delete({
+          where: { id: existingUser.id }
+        });
+        
+        console.log(`   🗑️  Deleted existing user and all related data`);
       }
 
-      // Create user
-      const createdUser = await prisma.user.create({
+      // Create user (fresh or replacement)
+      targetUser = await prisma.user.create({
         data: {
           id: userData.id,
           email: userData.email,
@@ -40,14 +55,14 @@ async function importData() {
         }
       });
 
-      console.log(`   ✅ Created user: ${createdUser.name}`);
+      console.log(`   ✅ Created user: ${targetUser.name}`);
 
       // Import recruitment processes
       for (const processData of userData.recruitmentProcesses) {
         const createdProcess = await prisma.recruitmentProcess.create({
           data: {
             id: processData.id,
-            userId: createdUser.id,
+            userId: targetUser.id,
             companyName: processData.companyName,
             position: processData.position,
             status: processData.status,
