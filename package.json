@@ -2,6 +2,9 @@
   "name": "recruitment-tracker",
   "version": "1.0.0",
   "description": "Job recruitment tracking application",
+  "engines": {
+    "node": "18.x"
+  },
   "scripts": {
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "server": "cd server && npm run dev",
