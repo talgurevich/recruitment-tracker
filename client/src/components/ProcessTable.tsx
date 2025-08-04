@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { actionItems as actionItemsApi } from '../services/api';
 import EditProcessModal from './EditProcessModal';
 import RejectProcessModal from './RejectProcessModal';
+import ExcitementRatingModal from './ExcitementRatingModal';
 
 interface ProcessTableProps {
   processes: any[];
@@ -15,6 +16,7 @@ const ProcessTable: React.FC<ProcessTableProps> = ({ processes, onUpdate, onDele
   const [actionTitle, setActionTitle] = useState('');
   const [editingProcess, setEditingProcess] = useState<any | null>(null);
   const [rejectingProcess, setRejectingProcess] = useState<any | null>(null);
+  const [ratingProcess, setRatingProcess] = useState<any | null>(null);
 
   const statusColors: Record<string, string> = {
     APPLIED: 'bg-blue-100 text-blue-800',
@@ -75,6 +77,36 @@ const ProcessTable: React.FC<ProcessTableProps> = ({ processes, onUpdate, onDele
     setRejectingProcess(null);
   };
 
+  const handleExcitementUpdate = () => {
+    window.location.reload();
+  };
+
+  const getExcitementDisplay = (process: any) => {
+    if (!process.excitementRating) return null;
+    
+    try {
+      const rating = JSON.parse(process.excitementRating);
+      const score = rating.overallScore || 0;
+      
+      let colorClass = 'text-gray-400';
+      if (score >= 4.5) colorClass = 'text-green-600';
+      else if (score >= 3.5) colorClass = 'text-blue-600';
+      else if (score >= 2.5) colorClass = 'text-yellow-600';
+      else if (score >= 1.5) colorClass = 'text-orange-600';
+      else colorClass = 'text-red-600';
+      
+      return (
+        <div className="flex items-center space-x-1">
+          <span className={`text-lg font-bold ${colorClass}`}>{score.toFixed(1)}</span>
+          <span className="text-gray-400">/5</span>
+        </div>
+      );
+    } catch (error) {
+      console.error('Error parsing excitement rating:', error);
+      return null;
+    }
+  };
+
   return (
     <div className="bg-white shadow rounded-lg overflow-hidden">
       <table className="min-w-full divide-y divide-gray-200">
@@ -91,6 +123,9 @@ const ProcessTable: React.FC<ProcessTableProps> = ({ processes, onUpdate, onDele
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Applied Date
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Excitement
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Actions
@@ -137,6 +172,17 @@ const ProcessTable: React.FC<ProcessTableProps> = ({ processes, onUpdate, onDele
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {new Date(process.appliedDate).toLocaleDateString()}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm">
+                  <button
+                    onClick={() => setRatingProcess(process)}
+                    className="hover:opacity-75 transition-opacity"
+                    title="Rate Excitement"
+                  >
+                    {getExcitementDisplay(process) || (
+                      <span className="text-gray-400 hover:text-gray-600">Rate →</span>
+                    )}
+                  </button>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {process.actionItems.filter((a: any) => !a.completed).length > 0 && (
@@ -187,7 +233,7 @@ const ProcessTable: React.FC<ProcessTableProps> = ({ processes, onUpdate, onDele
               
               {expandedRows.has(process.id) && (
                 <tr>
-                  <td colSpan={6} className="px-6 py-4 bg-gray-50">
+                  <td colSpan={7} className="px-6 py-4 bg-gray-50">
                     <div className="space-y-3">
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                         {process.location && (
@@ -256,7 +302,7 @@ const ProcessTable: React.FC<ProcessTableProps> = ({ processes, onUpdate, onDele
               
               {showAddAction === process.id && (
                 <tr>
-                  <td colSpan={6} className="px-6 py-4 bg-blue-50">
+                  <td colSpan={7} className="px-6 py-4 bg-blue-50">
                     <div className="flex items-center space-x-2">
                       <input
                         type="text"
@@ -307,6 +353,14 @@ const ProcessTable: React.FC<ProcessTableProps> = ({ processes, onUpdate, onDele
           process={rejectingProcess}
           onClose={() => setRejectingProcess(null)}
           onReject={handleRejectProcess}
+        />
+      )}
+      
+      {ratingProcess && (
+        <ExcitementRatingModal
+          process={ratingProcess}
+          onClose={() => setRatingProcess(null)}
+          onUpdate={handleExcitementUpdate}
         />
       )}
     </div>

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { processes as processesApi } from '../services/api';
+import { processes as processesApi, auth as authApi } from '../services/api';
 import ProcessTable from '../components/ProcessTable';
 import CreateProcessModal from '../components/CreateProcessModal';
+import WeightSetupModal from '../components/WeightSetupModal';
 
 const DashboardPage: React.FC = () => {
   const { user, logout } = useAuth();
@@ -10,9 +11,12 @@ const DashboardPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [filterStatus, setFilterStatus] = useState('all');
+  const [showWeightSetup, setShowWeightSetup] = useState(false);
+  const [hasSetupWeights, setHasSetupWeights] = useState(false);
 
   useEffect(() => {
     fetchProcesses();
+    checkWeightSetup();
   }, []);
 
   const fetchProcesses = async () => {
@@ -23,6 +27,18 @@ const DashboardPage: React.FC = () => {
       console.error('Failed to fetch processes:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const checkWeightSetup = async () => {
+    try {
+      const response = await authApi.getExcitementWeights();
+      // Check if weights are still default (user hasn't customized them)
+      const weights = response.weights;
+      const defaultSum = weights.salary === 0.35 && weights.workLife === 0.25;
+      setHasSetupWeights(!defaultSum);
+    } catch (error) {
+      console.error('Failed to check weight setup:', error);
     }
   };
 
@@ -72,6 +88,13 @@ const DashboardPage: React.FC = () => {
               <h1 className="text-xl font-bold text-gray-900">Job Tracker</h1>
             </div>
             <div className="flex items-center space-x-4">
+              <button
+                onClick={() => setShowWeightSetup(true)}
+                className="text-gray-600 hover:text-gray-800"
+                title="Excitement Weight Settings"
+              >
+                ⚙️
+              </button>
               <span className="text-gray-700">Hi, {user?.name}</span>
               <button
                 onClick={logout}
@@ -185,6 +208,29 @@ const DashboardPage: React.FC = () => {
           onClose={() => setShowCreateModal(false)}
           onCreate={handleCreateProcess}
         />
+      )}
+      
+      {showWeightSetup && (
+        <WeightSetupModal
+          onClose={() => setShowWeightSetup(false)}
+          onSave={() => {
+            setHasSetupWeights(true);
+            window.location.reload();
+          }}
+        />
+      )}
+      
+      {!hasSetupWeights && !loading && processes.length > 0 && (
+        <div className="fixed bottom-4 right-4 bg-blue-600 text-white p-4 rounded-lg shadow-lg max-w-sm">
+          <p className="font-semibold mb-2">Set up your excitement priorities!</p>
+          <p className="text-sm mb-3">Customize how you measure excitement for job opportunities.</p>
+          <button
+            onClick={() => setShowWeightSetup(true)}
+            className="bg-white text-blue-600 px-4 py-2 rounded hover:bg-gray-100 font-medium"
+          >
+            Set Priorities
+          </button>
+        </div>
       )}
     </div>
   );

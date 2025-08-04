@@ -29,6 +29,16 @@ export const auth = {
     const response = await api.get('/auth/profile');
     return response.data;
   },
+  
+  updateExcitementWeights: async (weights: Record<string, number>) => {
+    const response = await api.put('/auth/excitement-weights', { weights });
+    return response.data;
+  },
+  
+  getExcitementWeights: async () => {
+    const response = await api.get('/auth/excitement-weights');
+    return response.data;
+  },
 };
 
 export const processes = {
@@ -54,6 +64,11 @@ export const processes = {
   
   delete: async (id: string) => {
     await api.delete(`/processes/${id}`);
+  },
+  
+  updateExcitementRating: async (id: string, data: { scores: Record<string, number>; notes?: Record<string, string> }) => {
+    const response = await api.put(`/processes/${id}/excitement`, data);
+    return response.data;
   },
 };
 
