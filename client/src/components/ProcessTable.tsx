@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { actionItems as actionItemsApi } from '../services/api';
 import EditProcessModal from './EditProcessModal';
+import RejectProcessModal from './RejectProcessModal';
 
 interface ProcessTableProps {
   processes: any[];
@@ -13,6 +14,7 @@ const ProcessTable: React.FC<ProcessTableProps> = ({ processes, onUpdate, onDele
   const [showAddAction, setShowAddAction] = useState<string | null>(null);
   const [actionTitle, setActionTitle] = useState('');
   const [editingProcess, setEditingProcess] = useState<any | null>(null);
+  const [rejectingProcess, setRejectingProcess] = useState<any | null>(null);
 
   const statusColors: Record<string, string> = {
     APPLIED: 'bg-blue-100 text-blue-800',
@@ -66,6 +68,11 @@ const ProcessTable: React.FC<ProcessTableProps> = ({ processes, onUpdate, onDele
   const handleEditProcess = (data: any) => {
     onUpdate(editingProcess.id, data);
     setEditingProcess(null);
+  };
+
+  const handleRejectProcess = (data: any) => {
+    onUpdate(rejectingProcess.id, data);
+    setRejectingProcess(null);
   };
 
   return (
@@ -159,12 +166,21 @@ const ProcessTable: React.FC<ProcessTableProps> = ({ processes, onUpdate, onDele
                   >
                     ✏️
                   </button>
+                  {process.status !== 'REJECTED' && (
+                    <button
+                      onClick={() => setRejectingProcess(process)}
+                      className="text-orange-600 hover:text-orange-900 mr-2"
+                      title="Reject Application"
+                    >
+                      ❌
+                    </button>
+                  )}
                   <button
                     onClick={() => onDelete(process.id)}
                     className="text-red-600 hover:text-red-900"
                     title="Delete Application"
                   >
-                    ✕
+                    🗑️
                   </button>
                 </td>
               </tr>
@@ -198,6 +214,18 @@ const ProcessTable: React.FC<ProcessTableProps> = ({ processes, onUpdate, onDele
                         <div>
                           <span className="font-medium text-gray-700">Notes:</span>
                           <div className="text-gray-600">{process.notes}</div>
+                        </div>
+                      )}
+                      
+                      {process.status === 'REJECTED' && process.rejectionReason && (
+                        <div className="bg-red-50 p-3 rounded-md">
+                          <span className="font-medium text-red-900">Rejection Details:</span>
+                          <div className="text-red-700 mt-1">{process.rejectionReason}</div>
+                          {process.rejectionDate && (
+                            <div className="text-red-600 text-sm mt-1">
+                              Rejected on: {new Date(process.rejectionDate).toLocaleDateString()}
+                            </div>
+                          )}
                         </div>
                       )}
                       
@@ -271,6 +299,14 @@ const ProcessTable: React.FC<ProcessTableProps> = ({ processes, onUpdate, onDele
           process={editingProcess}
           onClose={() => setEditingProcess(null)}
           onUpdate={handleEditProcess}
+        />
+      )}
+      
+      {rejectingProcess && (
+        <RejectProcessModal
+          process={rejectingProcess}
+          onClose={() => setRejectingProcess(null)}
+          onReject={handleRejectProcess}
         />
       )}
     </div>

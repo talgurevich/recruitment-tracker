@@ -34,6 +34,7 @@ model RecruitmentProcess {
   contactPhone    String?
   contactName     String?
   rejectionReason String?
+  rejectionDate   DateTime?
   notes           String?
   appliedDate     DateTime     @default(now())
   lastContactDate DateTime?
