@@ -17,6 +17,7 @@ const CreateProcessModal: React.FC<CreateProcessModalProps> = ({ onClose, onCrea
     jobType: 'FULL_TIME',
     source: '',
     notes: '',
+    appliedDate: new Date().toISOString().split('T')[0], // Today's date in YYYY-MM-DD format
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -110,6 +111,19 @@ const CreateProcessModal: React.FC<CreateProcessModalProps> = ({ onClose, onCrea
                   <option value="INTERNSHIP">Internship</option>
                   <option value="FREELANCE">Freelance</option>
                 </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Applied Date
+                </label>
+                <input
+                  type="date"
+                  name="appliedDate"
+                  value={formData.appliedDate}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                />
               </div>
 
               <div>

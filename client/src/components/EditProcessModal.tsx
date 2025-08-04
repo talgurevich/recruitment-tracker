@@ -19,6 +19,7 @@ const EditProcessModal: React.FC<EditProcessModalProps> = ({ process, onClose, o
     source: process.source || '',
     notes: process.notes || '',
     rejectionReason: process.rejectionReason || '',
+    appliedDate: process.appliedDate ? new Date(process.appliedDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -112,6 +113,19 @@ const EditProcessModal: React.FC<EditProcessModalProps> = ({ process, onClose, o
                   <option value="INTERNSHIP">Internship</option>
                   <option value="FREELANCE">Freelance</option>
                 </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Applied Date
+                </label>
+                <input
+                  type="date"
+                  name="appliedDate"
+                  value={formData.appliedDate}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
               </div>
 
               <div>
