@@ -11,7 +11,7 @@
     "client": "cd client && npm start",
     "build": "cd client && npm run build && cd ../server && npm run build",
     "start": "cd server && npm start",
-    "heroku-postbuild": "cd server && npm install && npm run prisma:generate && npm run build",
+    "heroku-postbuild": "cd client && npm install && npm run build && cd ../server && npm install && npm run prisma:generate && npm run build",
     "migrate": "cd server && npx prisma migrate deploy"
   },
   "keywords": [],
