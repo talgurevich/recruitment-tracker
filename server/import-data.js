@@ -70,6 +70,7 @@ async function importData() {
             contactPhone: processData.contactPhone,
             contactName: processData.contactName,
             rejectionReason: processData.rejectionReason,
+            rejectionDate: processData.rejectionDate,
             notes: processData.notes,
             appliedDate: processData.appliedDate,
             lastContactDate: processData.lastContactDate,
