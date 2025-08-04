@@ -24,7 +24,12 @@ const EditProcessModal: React.FC<EditProcessModalProps> = ({ process, onClose, o
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onUpdate(formData);
+    // Convert the date string to ISO format for the backend
+    const dataToSubmit = {
+      ...formData,
+      appliedDate: formData.appliedDate ? new Date(formData.appliedDate).toISOString() : new Date().toISOString()
+    };
+    onUpdate(dataToSubmit);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {

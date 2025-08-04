@@ -22,7 +22,12 @@ const CreateProcessModal: React.FC<CreateProcessModalProps> = ({ onClose, onCrea
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onCreate(formData);
+    // Convert the date string to ISO format for the backend
+    const dataToSubmit = {
+      ...formData,
+      appliedDate: formData.appliedDate ? new Date(formData.appliedDate).toISOString() : new Date().toISOString()
+    };
+    onCreate(dataToSubmit);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
