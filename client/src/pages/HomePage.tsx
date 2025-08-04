@@ -119,12 +119,6 @@ const HomePage: React.FC = () => {
                   <p className="text-gray-600 leading-relaxed">
                     Keep all your job applications organized with company details, status updates, and contact information.
                   </p>
-                  <div className="mt-6 flex items-center text-blue-600 font-medium">
-                    Learn more
-                    <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </div>
                 </div>
               </div>
 
@@ -141,12 +135,6 @@ const HomePage: React.FC = () => {
                   <p className="text-gray-600 leading-relaxed">
                     Never miss a follow-up with our action item tracking. Set due dates and mark tasks as complete.
                   </p>
-                  <div className="mt-6 flex items-center text-blue-600 font-medium">
-                    Learn more
-                    <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </div>
                 </div>
               </div>
 
@@ -163,12 +151,6 @@ const HomePage: React.FC = () => {
                   <p className="text-gray-600 leading-relaxed">
                     Visualize your job search progress and see where you are in each recruitment process at a glance.
                   </p>
-                  <div className="mt-6 flex items-center text-blue-600 font-medium">
-                    Learn more
-                    <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </div>
                 </div>
               </div>
             </div>
