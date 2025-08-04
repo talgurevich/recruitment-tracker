@@ -9,7 +9,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -18,7 +18,7 @@ model User {
   email                String                @unique
   password             String
   name                 String
-  excitementWeights    String?
+  excitementWeights    Json?                 @default("{\"salary\": 0.35, \"workLife\": 0.25, \"growth\": 0.15, \"culture\": 0.10, \"role\": 0.08, \"location\": 0.05, \"stability\": 0.02}")
   createdAt            DateTime              @default(now())
   updatedAt            DateTime              @updatedAt
   recruitmentProcesses RecruitmentProcess[]
@@ -43,7 +43,7 @@ model RecruitmentProcess {
   location        String?
   jobType         JobType      @default(FULL_TIME)
   source          String?
-  excitementRating String?
+  excitementRating Json?
   createdAt       DateTime     @default(now())
   updatedAt       DateTime     @updatedAt
   actionItems     ActionItem[]
