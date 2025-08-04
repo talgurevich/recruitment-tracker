@@ -121,7 +121,7 @@ export const updateExcitementWeights = async (req: Request & { userId?: string }
     const user = await prisma.user.update({
       where: { id: req.userId },
       data: {
-        excitementWeights: JSON.stringify(weights)
+        excitementWeights: weights
       }
     });
 
@@ -157,7 +157,7 @@ export const getExcitementWeights = async (req: Request & { userId?: string }, r
       stability: 0.02
     };
 
-    const weights = user.excitementWeights ? JSON.parse(user.excitementWeights) : defaultWeights;
+    const weights = user.excitementWeights ? user.excitementWeights : defaultWeights;
     
     res.json({ weights });
   } catch (error) {

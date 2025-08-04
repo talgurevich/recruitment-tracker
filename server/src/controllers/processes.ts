@@ -147,7 +147,7 @@ export const updateExcitementRating = async (req: AuthRequest, res: Response) =>
       stability: 0.02
     };
 
-    const weights = user?.excitementWeights ? JSON.parse(user.excitementWeights) : defaultWeights;
+    const weights = user?.excitementWeights ? user.excitementWeights : defaultWeights;
 
     // Calculate weighted score
     let overallScore = 0;
@@ -165,7 +165,7 @@ export const updateExcitementRating = async (req: AuthRequest, res: Response) =>
     const process = await prisma.recruitmentProcess.update({
       where: { id: req.params.id },
       data: {
-        excitementRating: JSON.stringify(excitementRating)
+        excitementRating: excitementRating
       }
     });
 
