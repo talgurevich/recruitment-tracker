@@ -90,10 +90,11 @@ const DashboardPage: React.FC = () => {
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => setShowWeightSetup(true)}
-                className="text-gray-600 hover:text-gray-800"
-                title="Excitement Weight Settings"
+                className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md flex items-center space-x-1"
+                title="Edit Excitement Weights"
               >
-                ⚙️
+                <span>⚙️</span>
+                <span>Edit Weights</span>
               </button>
               <span className="text-gray-700">Hi, {user?.name}</span>
               <button
@@ -130,6 +131,19 @@ const DashboardPage: React.FC = () => {
               </div>
               <div className="text-gray-600 text-sm">Pending Actions</div>
             </div>
+          </div>
+          
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6 flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-yellow-800">Excitement Weight Model</p>
+              <p className="text-xs text-yellow-600 mt-1">Customize how job excitement is calculated based on your priorities</p>
+            </div>
+            <button
+              onClick={() => setShowWeightSetup(true)}
+              className="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded-md text-sm font-medium"
+            >
+              Edit Weights
+            </button>
           </div>
 
           <div className="flex justify-between items-center mb-6">

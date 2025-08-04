@@ -165,7 +165,7 @@ export const updateExcitementRating = async (req: AuthRequest, res: Response) =>
     const process = await prisma.recruitmentProcess.update({
       where: { id: req.params.id },
       data: {
-        excitementRating: excitementRating
+        excitementRating: JSON.stringify(excitementRating)
       }
     });
 
