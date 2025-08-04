@@ -127,7 +127,7 @@ export const updateExcitementWeights = async (req: Request & { userId?: string }
 
     res.json({ 
       message: 'Excitement weights updated successfully',
-      weights: JSON.parse(user.excitementWeights || '{}')
+      weights: JSON.parse(user.excitementWeights as string || '{}')
     });
   } catch (error) {
     console.error('Update excitement weights error:', error);

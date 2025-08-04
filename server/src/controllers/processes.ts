@@ -152,7 +152,7 @@ export const updateExcitementRating = async (req: AuthRequest, res: Response) =>
     // Calculate weighted score
     let overallScore = 0;
     for (const [category, score] of Object.entries(scores)) {
-      overallScore += (score as number) * weights[category];
+      overallScore += (score as number) * (weights as any)[category];
     }
 
     const excitementRating = {
