@@ -36,9 +36,17 @@ const ExcitementRatingModal: React.FC<ExcitementRatingModalProps> = ({ process, 
   useEffect(() => {
     loadWeights();
     if (process.excitementRating) {
-      const rating = JSON.parse(process.excitementRating);
-      setScores(rating.scores);
-      setNotes(rating.notes || {});
+      try {
+        // Handle case where excitementRating might already be an object
+        const rating = typeof process.excitementRating === 'string' 
+          ? JSON.parse(process.excitementRating) 
+          : process.excitementRating;
+        setScores(rating.scores);
+        setNotes(rating.notes || {});
+      } catch (error) {
+        console.error('Error parsing excitement rating:', error);
+        console.error('Raw data:', process.excitementRating);
+      }
     }
   }, [process]);
 

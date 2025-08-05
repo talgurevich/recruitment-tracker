@@ -12,7 +12,7 @@ const DashboardPage: React.FC = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [filterStatus, setFilterStatus] = useState('all');
   const [showWeightSetup, setShowWeightSetup] = useState(false);
-  const [hasSetupWeights, setHasSetupWeights] = useState(false);
+  const [hasSetupWeights, setHasSetupWeights] = useState(true); // Default to true to prevent flash
 
   useEffect(() => {
     fetchProcesses();
@@ -32,6 +32,13 @@ const DashboardPage: React.FC = () => {
 
   const checkWeightSetup = async () => {
     try {
+      // Check if user has dismissed the popup
+      const dismissed = localStorage.getItem('weightPopupDismissed');
+      if (dismissed === 'true') {
+        setHasSetupWeights(true);
+        return;
+      }
+
       const response = await authApi.getExcitementWeights();
       // Check if weights are still default (user hasn't customized them)
       const weights = response.weights;
@@ -39,6 +46,7 @@ const DashboardPage: React.FC = () => {
       setHasSetupWeights(!defaultSum);
     } catch (error) {
       console.error('Failed to check weight setup:', error);
+      setHasSetupWeights(true); // Hide popup on error
     }
   };
 
@@ -229,6 +237,7 @@ const DashboardPage: React.FC = () => {
           onClose={() => setShowWeightSetup(false)}
           onSave={() => {
             setHasSetupWeights(true);
+            localStorage.setItem('weightPopupDismissed', 'true');
             window.location.reload();
           }}
         />
@@ -236,6 +245,18 @@ const DashboardPage: React.FC = () => {
       
       {!hasSetupWeights && !loading && processes.length > 0 && (
         <div className="fixed bottom-4 right-4 bg-blue-600 text-white p-4 rounded-lg shadow-lg max-w-sm">
+          <button
+            onClick={() => {
+              setHasSetupWeights(true);
+              localStorage.setItem('weightPopupDismissed', 'true');
+            }}
+            className="absolute top-2 right-2 text-white hover:text-gray-200"
+            aria-label="Close"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
           <p className="font-semibold mb-2">Set up your excitement priorities!</p>
           <p className="text-sm mb-3">Customize how you measure excitement for job opportunities.</p>
           <button
