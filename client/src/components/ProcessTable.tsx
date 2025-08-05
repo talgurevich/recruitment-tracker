@@ -85,7 +85,10 @@ const ProcessTable: React.FC<ProcessTableProps> = ({ processes, onUpdate, onDele
     if (!process.excitementRating) return null;
     
     try {
-      const rating = JSON.parse(process.excitementRating);
+      // Handle case where excitementRating might already be an object
+      const rating = typeof process.excitementRating === 'string' 
+        ? JSON.parse(process.excitementRating) 
+        : process.excitementRating;
       const score = rating.overallScore || 0;
       
       let colorClass = 'text-gray-400';

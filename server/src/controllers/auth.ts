@@ -125,9 +125,15 @@ export const updateExcitementWeights = async (req: Request & { userId?: string }
       }
     });
 
+    // Handle PostgreSQL JSON field - ensure it's parsed properly
+    let returnWeights = user.excitementWeights;
+    if (typeof returnWeights === 'string') {
+      returnWeights = JSON.parse(returnWeights);
+    }
+    
     res.json({ 
       message: 'Excitement weights updated successfully',
-      weights: user.excitementWeights || {}
+      weights: returnWeights || {}
     });
   } catch (error) {
     console.error('Update excitement weights error:', error);
@@ -157,7 +163,16 @@ export const getExcitementWeights = async (req: Request & { userId?: string }, r
       stability: 0.02
     };
 
-    const weights = user.excitementWeights ? user.excitementWeights : defaultWeights;
+    // Handle PostgreSQL JSON field - ensure it's parsed properly
+    let weights;
+    if (user.excitementWeights) {
+      // If it's a string (from PostgreSQL), parse it
+      weights = typeof user.excitementWeights === 'string' 
+        ? JSON.parse(user.excitementWeights as string)
+        : user.excitementWeights;
+    } else {
+      weights = defaultWeights;
+    }
     
     res.json({ weights });
   } catch (error) {
