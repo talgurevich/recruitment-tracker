@@ -96,6 +96,7 @@ const EditProcessModal: React.FC<EditProcessModalProps> = ({ process, onClose, o
                   <option value="APPLIED">Applied</option>
                   <option value="SCREENING">Screening</option>
                   <option value="INTERVIEW">Interview</option>
+                  <option value="HOME_ASSIGNMENT">Home Assignment</option>
                   <option value="OFFER">Offer</option>
                   <option value="REJECTED">Rejected</option>
                   <option value="WITHDRAWN">Withdrawn</option>

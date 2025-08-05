@@ -1,15 +1,12 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+// This is your Prisma schema file for local development with SQLite
+// Copy this to schema.prisma when developing locally
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -18,7 +15,7 @@ model User {
   email                String                @unique
   password             String
   name                 String
-  excitementWeights    Json?                 @default("{\"salary\": 0.35, \"workLife\": 0.25, \"growth\": 0.15, \"culture\": 0.10, \"role\": 0.08, \"location\": 0.05, \"stability\": 0.02}")
+  excitementWeights    String?
   createdAt            DateTime              @default(now())
   updatedAt            DateTime              @updatedAt
   recruitmentProcesses RecruitmentProcess[]
@@ -43,7 +40,7 @@ model RecruitmentProcess {
   location        String?
   jobType         JobType      @default(FULL_TIME)
   source          String?
-  excitementRating Json?
+  excitementRating String?
   createdAt       DateTime     @default(now())
   updatedAt       DateTime     @updatedAt
   actionItems     ActionItem[]
@@ -65,6 +62,7 @@ enum Status {
   APPLIED
   SCREENING
   INTERVIEW
+  HOME_ASSIGNMENT
   OFFER
   REJECTED
   WITHDRAWN

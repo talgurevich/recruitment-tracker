@@ -126,8 +126,10 @@ const DashboardPage: React.FC = () => {
               <div className="text-gray-600 text-sm">Total Applications</div>
             </div>
             <div className="bg-white p-4 rounded-lg shadow">
-              <div className="text-2xl font-bold text-green-600">{statusCounts.INTERVIEW || 0}</div>
-              <div className="text-gray-600 text-sm">Interviews</div>
+              <div className="text-2xl font-bold text-green-600">
+                {(statusCounts.INTERVIEW || 0) + (statusCounts.HOME_ASSIGNMENT || 0)}
+              </div>
+              <div className="text-gray-600 text-sm">In Progress</div>
             </div>
             <div className="bg-white p-4 rounded-lg shadow">
               <div className="text-2xl font-bold text-purple-600">{statusCounts.OFFER || 0}</div>
@@ -185,6 +187,16 @@ const DashboardPage: React.FC = () => {
                 }`}
               >
                 Interview ({statusCounts.INTERVIEW || 0})
+              </button>
+              <button
+                onClick={() => setFilterStatus('HOME_ASSIGNMENT')}
+                className={`px-4 py-2 rounded-md ${
+                  filterStatus === 'HOME_ASSIGNMENT'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-white text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                Home Assignment ({statusCounts.HOME_ASSIGNMENT || 0})
               </button>
             </div>
             <button

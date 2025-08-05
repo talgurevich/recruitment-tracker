@@ -16,6 +16,7 @@ const ProcessCard: React.FC<ProcessCardProps> = ({ process, onUpdate, onDelete }
     APPLIED: 'bg-blue-100 text-blue-800',
     SCREENING: 'bg-yellow-100 text-yellow-800',
     INTERVIEW: 'bg-purple-100 text-purple-800',
+    HOME_ASSIGNMENT: 'bg-indigo-100 text-indigo-800',
     OFFER: 'bg-green-100 text-green-800',
     REJECTED: 'bg-red-100 text-red-800',
     WITHDRAWN: 'bg-gray-100 text-gray-800',
@@ -137,6 +138,7 @@ const ProcessCard: React.FC<ProcessCardProps> = ({ process, onUpdate, onDelete }
               <option value="APPLIED">Applied</option>
               <option value="SCREENING">Screening</option>
               <option value="INTERVIEW">Interview</option>
+              <option value="HOME_ASSIGNMENT">Home Assignment</option>
               <option value="OFFER">Offer</option>
               <option value="REJECTED">Rejected</option>
               <option value="WITHDRAWN">Withdrawn</option>
