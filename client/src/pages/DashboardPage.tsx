@@ -78,11 +78,22 @@ const DashboardPage: React.FC = () => {
     }
   };
 
-  const filteredProcesses = filterStatus === 'all'
-    ? processes
-    : processes.filter(p => p.status === filterStatus);
+  // Separate active and inactive applications
+  const activeProcesses = processes.filter(p => !['REJECTED', 'WITHDRAWN'].includes(p.status));
+  const inactiveProcesses = processes.filter(p => ['REJECTED', 'WITHDRAWN'].includes(p.status));
+  
+  const filteredActiveProcesses = filterStatus === 'all'
+    ? activeProcesses
+    : activeProcesses.filter(p => p.status === filterStatus);
 
-  const statusCounts = processes.reduce((acc, process) => {
+  // Count only active processes for main statistics
+  const activeStatusCounts = activeProcesses.reduce((acc, process) => {
+    acc[process.status] = (acc[process.status] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+  
+  // Count all processes (including inactive) for complete statistics
+  const allStatusCounts = processes.reduce((acc, process) => {
     acc[process.status] = (acc[process.status] || 0) + 1;
     return acc;
   }, {} as Record<string, number>);
@@ -122,22 +133,22 @@ const DashboardPage: React.FC = () => {
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             <div className="bg-white p-4 rounded-lg shadow">
-              <div className="text-2xl font-bold text-blue-600">{processes.length}</div>
-              <div className="text-gray-600 text-sm">Total Applications</div>
+              <div className="text-2xl font-bold text-blue-600">{activeProcesses.length}</div>
+              <div className="text-gray-600 text-sm">Active Applications</div>
             </div>
             <div className="bg-white p-4 rounded-lg shadow">
               <div className="text-2xl font-bold text-green-600">
-                {(statusCounts.INTERVIEW || 0) + (statusCounts.HOME_ASSIGNMENT || 0)}
+                {(activeStatusCounts.INTERVIEW || 0) + (activeStatusCounts.HOME_ASSIGNMENT || 0)}
               </div>
               <div className="text-gray-600 text-sm">In Progress</div>
             </div>
             <div className="bg-white p-4 rounded-lg shadow">
-              <div className="text-2xl font-bold text-purple-600">{statusCounts.OFFER || 0}</div>
+              <div className="text-2xl font-bold text-purple-600">{activeStatusCounts.OFFER || 0}</div>
               <div className="text-gray-600 text-sm">Offers</div>
             </div>
             <div className="bg-white p-4 rounded-lg shadow">
               <div className="text-2xl font-bold text-orange-600">
-                {processes.reduce((count, p) => count + p.actionItems.filter((a: any) => !a.completed).length, 0)}
+                {activeProcesses.reduce((count, p) => count + p.actionItems.filter((a: any) => !a.completed).length, 0)}
               </div>
               <div className="text-gray-600 text-sm">Pending Actions</div>
             </div>
@@ -166,7 +177,7 @@ const DashboardPage: React.FC = () => {
                     : 'bg-white text-gray-700 hover:bg-gray-50'
                 }`}
               >
-                All ({processes.length})
+                All Active ({activeProcesses.length})
               </button>
               <button
                 onClick={() => setFilterStatus('APPLIED')}
@@ -176,7 +187,7 @@ const DashboardPage: React.FC = () => {
                     : 'bg-white text-gray-700 hover:bg-gray-50'
                 }`}
               >
-                Applied ({statusCounts.APPLIED || 0})
+                Applied ({activeStatusCounts.APPLIED || 0})
               </button>
               <button
                 onClick={() => setFilterStatus('INTERVIEW')}
@@ -186,7 +197,7 @@ const DashboardPage: React.FC = () => {
                     : 'bg-white text-gray-700 hover:bg-gray-50'
                 }`}
               >
-                Interview ({statusCounts.INTERVIEW || 0})
+                Interview ({activeStatusCounts.INTERVIEW || 0})
               </button>
               <button
                 onClick={() => setFilterStatus('HOME_ASSIGNMENT')}
@@ -196,7 +207,7 @@ const DashboardPage: React.FC = () => {
                     : 'bg-white text-gray-700 hover:bg-gray-50'
                 }`}
               >
-                Home Assignment ({statusCounts.HOME_ASSIGNMENT || 0})
+                Home Assignment ({activeStatusCounts.HOME_ASSIGNMENT || 0})
               </button>
             </div>
             <button
@@ -212,28 +223,57 @@ const DashboardPage: React.FC = () => {
           <div className="text-center py-12">
             <div className="text-gray-500">Loading your applications...</div>
           </div>
-        ) : filteredProcesses.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-lg shadow">
-            <div className="text-gray-500 mb-4">
-              {filterStatus === 'all'
-                ? "You haven't tracked any applications yet."
-                : `No applications with status: ${filterStatus}`}
-            </div>
-            {filterStatus === 'all' && (
-              <button
-                onClick={() => setShowCreateModal(true)}
-                className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
-              >
-                Track Your First Application
-              </button>
-            )}
-          </div>
         ) : (
-          <ProcessTable
-            processes={filteredProcesses}
-            onUpdate={handleUpdateProcess}
-            onDelete={handleDeleteProcess}
-          />
+          <>
+            {/* Active Applications Section */}
+            <div className="mb-8">
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">Active Applications</h3>
+              {filteredActiveProcesses.length === 0 ? (
+                <div className="text-center py-12 bg-white rounded-lg shadow">
+                  <div className="text-gray-500 mb-4">
+                    {filterStatus === 'all'
+                      ? "You haven't tracked any active applications yet."
+                      : `No active applications with status: ${filterStatus}`}
+                  </div>
+                  {filterStatus === 'all' && (
+                    <button
+                      onClick={() => setShowCreateModal(true)}
+                      className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                    >
+                      Track Your First Application
+                    </button>
+                  )}
+                </div>
+              ) : (
+                <ProcessTable
+                  processes={filteredActiveProcesses}
+                  onUpdate={handleUpdateProcess}
+                  onDelete={handleDeleteProcess}
+                />
+              )}
+            </div>
+
+            {/* Inactive Applications Section */}
+            {inactiveProcesses.length > 0 && (
+              <div className="mb-8">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-xl font-semibold text-gray-600">
+                    Archived Applications ({inactiveProcesses.length})
+                  </h3>
+                  <div className="text-sm text-gray-500">
+                    {allStatusCounts.REJECTED || 0} rejected, {allStatusCounts.WITHDRAWN || 0} withdrawn
+                  </div>
+                </div>
+                <div className="bg-gray-50 rounded-lg p-1">
+                  <ProcessTable
+                    processes={inactiveProcesses}
+                    onUpdate={handleUpdateProcess}
+                    onDelete={handleDeleteProcess}
+                  />
+                </div>
+              </div>
+            )}
+          </>
         )}
       </main>
 
